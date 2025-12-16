@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsightPilot: AI Strategy Engine</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+</head>
+<body>
+    <header>
+        <div class="header-title-group">
+            <h1>INSIGHTPILOT</h1>
+            <p class="tagline">The AI Analyst for Actionable Growth</p>
+        </div>
+        
+        <div id="mode-toggle-container">
+            <span class="mode-label">Light Mode</span>
+            <input type="checkbox" id="mode-toggle" class="mode-toggle">
+        </div>
+    </header>
+
+    <main id="app-container">
+        
+        <div class="dashboard-grid">
+            
+            <div class="main-content-area">
+                
+                <section id="input-panel" class="card">
+                    <h2>DATA SOURCE</h2>
+                    <div class="input-area">
+                        <p class="guide-text">Paste your recent sales/performance data below (CSV format). Sample data loaded for quick demo.</p>
+                        <textarea id="data-input" placeholder="Date, Sales, Region, etc..."></textarea>
+                    </div>
+                    
+                    <div id="churn-alert" class="alert-box">
+                        <p>Loading data...</p>
+                    </div>
+
+                    <div class="action-bar">
+                        
+                        <div class="upload-control-group">
+                            <input type="file" id="file-upload" accept=".csv,text/csv" style="display: none;">
+                            
+                            <label for="file-upload" class="upload-button">
+                                📂 Upload CSV
+                            </label>
+                            
+                            <span id="file-name" class="file-info-text">No file selected.</span>
+                        </div>
+
+                        <button id="analyze-data" class="primary-btn">GENERATE STRATEGIC INSIGHT</button>
+                    </div>
+                </section>
+
+                <div id="loading-area" class="card hidden">
+                    <div class="loader"></div>
+                    <p>ANALYZING DATA... IDENTIFYING ROOT CAUSES...</p>
+                </div>
+
+                <section id="results-panel" class="card hidden">
+                    <h2>VISUAL ANALYSIS</h2>
+                    
+                    <div class="chart-controls">
+                        <label for="chart-type-toggle">Chart Type: </label>
+                        <select id="chart-type-toggle">
+                            <option value="bar">Bar Chart</option>
+                            <option value="line">Line Chart</option>
+                        </select>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas> 
+                    </div>
+                    
+                    <hr>
+
+                    <h2>STRATEGIC INSIGHT (AI GENERATED)</h2>
+                    <div id="ai-results">
+                        </div>
+                    
+                    <div class="results-actions">
+                        <button id="export-json" class="secondary-btn">⬇️ EXPORT REPORT (JSON)</button>
+                        <button class="primary-btn" onclick="location.reload()">ANALYZE NEW DATASET</button>
+                    </div>
+                </section>
+                
+            </div>
+            
+            <aside id="history-sidebar" class="sidebar">
+                <h2>REPORT HISTORY</h2>
+                <div id="history-list">
+                    <p class="guide-text">No reports saved yet.</p>
+                </div>
+            </aside>
+            
+        </div>
+    </main>
+    
+    <script src="script.js"></script>
+</body>
+</html>
