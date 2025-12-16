@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // =======================================================
-    // I. CORE DATA & MOCK RESPONSE (FOR RELIABLE DEMO)
-    // =======================================================
-
-    // Note: The GOLDEN_RESPONSE now includes the original rawData for export integrity
+    // CORE DATA & MOCK RESPONSE  DEMO
+   
     let CURRENT_RAW_DATA = '';
     let CURRENT_AI_RESPONSE = '';
 
@@ -47,9 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { Date: '2025-12-01', Region: 'East', Sales_Units: 1600, Customer_Churn_Rate: 0.02 }
     ];
 
-    // =======================================================
-    // II. UI INITIALIZATION AND EVENT HANDLERS
-    // =======================================================
+    //  INITIALIZATION 
+  
     const dataInput = document.getElementById('data-input');
     const analyzeButton = document.getElementById('analyze-data');
     const inputPanel = document.getElementById('input-panel');
@@ -63,12 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
     const historyList = document.getElementById('history-list');
     
-    // NEW ELEMENTS FOR HACKATHON FEATURES
+
     const churnAlert = document.getElementById('churn-alert');
     const exportButton = document.getElementById('export-json');
     const chartTypeToggle = document.getElementById('chart-type-toggle'); 
 
-    // --- Theme Switching ---
+    //Theme Switching 
     const savedMode = localStorage.getItem('theme') || 'dark';
     if (savedMode === 'light') {
         body.classList.add('light-mode');
@@ -90,13 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dataInput) dataInput.value = SAMPLE_CSV;
     updateChurnAlert(SAMPLE_CSV);
     
-    // Attach listener for real-time alert updates on user input
+    // Attach listener
     if (dataInput) {
         dataInput.addEventListener('input', (e) => updateChurnAlert(e.target.value));
     }
 
 
-    // --- File Upload Logic FIX ---
+    // File Upload 
     if (fileInput && dataInput) {
         fileInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
@@ -107,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const fileContent = e.target.result;
                     dataInput.value = fileContent;
                     fileNameDisplay.textContent = `Loaded: ${file.name}`;
-                    updateChurnAlert(fileContent); // Update alert after file load
+                    updateChurnAlert(fileContent); // Update alert 
                 };
                 reader.readAsText(file);
             } else {
@@ -117,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- NEW FEATURE 4: Chart Type Toggle Handler ---
     if (chartTypeToggle) {
         chartTypeToggle.addEventListener('change', () => {
             if (salesChartInstance) {
@@ -127,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- NEW FEATURE 2: Export Button Handler ---
+    //Export 
     if (exportButton) {
         exportButton.addEventListener('click', () => {
             exportReportToJson();
@@ -135,43 +130,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- Main Analyze Button Click ---
+    //Analyze 
     if (analyzeButton) {
         analyzeButton.addEventListener('click', async () => {
             const rawData = (dataInput && dataInput.value) ? dataInput.value.trim() : '';
             if (!rawData) { alert('Please paste data or upload a file.'); return; }
 
-            // UI State Change Show Loading
+            // UI State Change 
             if (inputPanel) inputPanel.classList.add('hidden');
             if (loadingArea) loadingArea.classList.remove('hidden');
             if (resultsPanel) resultsPanel.classList.add('hidden');
 
-            // NEW FEATURE 1: Data Sanitization (Optional, since mock data is clean)
+            // Data Sanitization 
             const sanitizedData = sanitizeCSV(rawData);
             
-            // Call Mock Analysis
+            // Mock Analysis
             const result = await callMockAnalysis(sanitizedData);
             
             CURRENT_RAW_DATA = sanitizedData;
-            CURRENT_AI_RESPONSE = GOLDEN_RESPONSE_HTML; // Set the mock response for export
+            CURRENT_AI_RESPONSE = GOLDEN_RESPONSE_HTML; // Set mock response for export
 
-            // Prepare and Render Chart (using mock CHART_DATA for consistency)
+            // Prepare and Render Chart
             const aggregatedData = aggregateDataByRegion(CHART_DATA);
             const chartData = prepareChartData(aggregatedData);
             renderChart(chartData);
             
-            // Save and Render Results
+            // Save 
             saveReport(sanitizedData, GOLDEN_RESPONSE_HTML);
             renderResults(GOLDEN_RESPONSE_HTML);
         });
     }
 
-    // =======================================================
-    // III. MOCK AI CALL & RESULT RENDERING
-    // =======================================================
-
     async function callMockAnalysis(rawData) {
-        // Simulate a 2.5 second wait time to make the 'analysis' feel real
         await new Promise(r => setTimeout(r, 2500));
         return GOLDEN_RESPONSE_HTML;
     }
@@ -182,20 +172,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (resultsPanel) resultsPanel.classList.remove('hidden');
         renderHistoryList();
     }
-    
-    // =======================================================
-    // IV. HACKATHON WINNING FEATURES IMPLEMENTATION
-    // =======================================================
-    
-    // NEW FEATURE 1: Dynamic CSV Sanitization
+
     function sanitizeCSV(csvString) {
         return csvString.split('\n')
             .filter(line => line.trim() !== '') // Remove empty lines
             .map(line => line.trim()) // Trim whitespace from lines
             .join('\n');
     }
-    
-    // NEW FEATURE 2: Export Report as JSON
+
+    // Export Report as JSON
     function exportReportToJson() {
         if (!CURRENT_RAW_DATA || !CURRENT_AI_RESPONSE) {
             alert("Please run an analysis first.");
@@ -225,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         URL.revokeObjectURL(url);
     }
 
-    // NEW FEATURE 3: Real-Time Churn Alert
+    //  Real-Time Churn Alert
     function updateChurnAlert(csvData) {
         if (!churnAlert) return;
         
@@ -277,10 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // =======================================================
-    // V. HISTORY FEATURE (THE CATCH)
-    // =======================================================
-
     function saveReport(rawData, aiResponse) {
         const reports = JSON.parse(localStorage.getItem('reports') || '[]');
         const date = new Date().toLocaleString();
@@ -304,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dataInput.value = report.rawData;
             renderResults(report.aiResponse);
             
-            // Re-render the chart (using the mock data structure for demo reliability)
+            // Re-render the chart 
             const aggregatedData = aggregateDataByRegion(CHART_DATA);
             const chartData = prepareChartData(aggregatedData);
             renderChart(chartData);
@@ -335,10 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     renderHistoryList();
-
-    // =======================================================
-    // VI. CHART.JS DATA PREP AND RENDERING
-    // =======================================================
 
     // Helper to calculate total sales and average churn per region
     function aggregateDataByRegion(dataArray) {
@@ -391,21 +368,21 @@ document.addEventListener('DOMContentLoaded', () => {
             return; 
         }
         
-        // Create new chart instance
+        //new chart instance
         salesChartInstance = new Chart(ctx, { 
-            type: chartType, // Uses the current selection
+            type: chartType, // current selection
             data: { 
                 labels: chartData.labels, 
                 datasets: [
                     { 
-                        type: 'bar', // Sales is always a bar (or the primary element)
+                        type: 'bar', 
                         label: 'Total Sales Units', 
                         data: chartData.sales, 
                         backgroundColor: '#3b82f6',
                         yAxisID: 'y'
                     }, 
                     { 
-                        type: 'line', // Churn is always a line for trend comparison
+                        type: 'line', 
                         label: 'Avg Churn (%)', 
                         data: chartData.churn, 
                         yAxisID: 'y1', 
